@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin buổi tiệc | JUJU Nướng - Kzone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #171011;
+            --panel: rgba(39, 25, 23, 0.92);
+            --panel-soft: rgba(255, 248, 238, 0.08);
+            --text: #fff7ef;
+            --muted: rgba(255, 247, 239, 0.7);
+            --gold: #e7c57e;
+            --line: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+            display: grid;
+            place-items: center;
+            font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(231, 197, 126, 0.14), transparent 24%),
+                radial-gradient(circle at bottom right, rgba(141, 64, 43, 0.18), transparent 28%),
+                linear-gradient(160deg, var(--bg), #251717 54%, #140d0e);
+        }
+
+        .page {
+            width: min(720px, 100%);
+            padding: 28px;
+            border-radius: 30px;
+            background: linear-gradient(180deg, rgba(49, 31, 28, 0.96), rgba(29, 20, 18, 0.98));
+            border: 1px solid var(--line);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            font-size: 0.78rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2.6rem, 8vw, 4.2rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .lead {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        .cards {
+            display: grid;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .card {
+            padding: 18px 18px 16px;
+            border-radius: 22px;
+            background: var(--panel-soft);
+            border: 1px solid var(--line);
+        }
+
+        .label {
+            margin: 0 0 8px;
+            font-size: 0.74rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .value {
+            margin: 0;
+            font-size: 1.06rem;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .value--sub {
+            font-size: 0.96rem;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.94rem;
+            font-weight: 600;
+        }
+
+        .button--primary {
+            color: #251717;
+            background: linear-gradient(135deg, #f0d6a2, #dfb86a);
+        }
+
+        .button--secondary {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--line);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 14px;
+            }
+
+            .page {
+                padding: 22px 18px;
+                border-radius: 24px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <p class="eyebrow">Thông tin buổi tiệc</p>
+        <h1>JUJU Nướng<br>Kzone</h1>
+        <p class="lead">
+            Hân hạnh chào đón bạn đến buổi tiệc vào lúc 19:00 tối ngày 14/04/2026.
+            Đây là trang thông tin chính được mở ra khi khách mời quét mã QR.
+        </p>
+
+        <section class="cards">
+            <article class="card">
+                <p class="label">Khách mời</p>
+                <p class="value" data-guest-name>bạn iuuu</p>
+            </article>
+
+            <article class="card">
+                <p class="label">Người mời</p>
+                <p class="value">Nguyễn Thanh Giàu</p>
+            </article>
+
+            <article class="card">
+                <p class="label">Thời gian</p>
+                <p class="value">19:00 tối • Thứ Ba, 14/04/2026</p>
+            </article>
+
+            <article class="card">
+                <p class="label">Địa điểm</p>
+                <p class="value">JUJU Nướng - Kzone</p>
+                <p class="value value--sub">458 Đ. Phạm Văn Đồng, Phường 13, Bình Lợi Trung, Hồ Chí Minh 700000, Việt Nam</p>
+            </article>
+        </section>
+
+        <div class="actions">
+            <a class="button button--primary" href="https://www.google.com/maps/search/?api=1&query=JUJU%20N%C6%B0%E1%BB%9Bng%20-%20Kzone%20458%20%C4%90.%20Ph%E1%BA%A1m%20V%C4%83n%20%C4%90%E1%BB%93ng%2C%20Ph%C6%B0%E1%BB%9Dng%2013%2C%20B%C3%ACnh%20L%E1%BB%A3i%20Trung%2C%20H%E1%BB%93%20Ch%C3%AD%20Minh" target="_blank" rel="noreferrer">Mở bản đồ</a>
+        </div>
+    </main>
+
+    <script>
+        const guestNameElement = document.querySelector("[data-guest-name]");
+        const guestNameParam = new URLSearchParams(window.location.search).get("khach-moi")
+            || new URLSearchParams(window.location.search).get("guest");
+
+        if (guestNameElement && guestNameParam) {
+            guestNameElement.textContent = guestNameParam.trim();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo QR thiệp mời</title>
+    <style>
+        :root {
+            --bg: #171011;
+            --panel: rgba(49, 31, 28, 0.96);
+            --panel-soft: rgba(255, 248, 238, 0.08);
+            --text: #fff7ef;
+            --muted: rgba(255, 247, 239, 0.7);
+            --gold: #e7c57e;
+            --line: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(231, 197, 126, 0.14), transparent 24%),
+                radial-gradient(circle at bottom right, rgba(141, 64, 43, 0.18), transparent 28%),
+                linear-gradient(160deg, var(--bg), #251717 54%, #140d0e);
+        }
+
+        main {
+            width: min(980px, 100%);
+            padding: 28px;
+            border-radius: 30px;
+            background: linear-gradient(180deg, var(--panel), rgba(29, 20, 18, 0.98));
+            border: 1px solid var(--line);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            font-size: 0.78rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2.4rem, 8vw, 3.9rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .lead {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        .fields {
+            display: grid;
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .input {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: var(--panel-soft);
+            color: var(--text);
+            font: inherit;
+        }
+
+        .input--textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .input::placeholder {
+            color: rgba(255, 247, 239, 0.42);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.94rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .button--primary {
+            color: #251717;
+            background: linear-gradient(135deg, #f0d6a2, #dfb86a);
+        }
+
+        .button--secondary {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--line);
+        }
+
+        .helper,
+        .result {
+            margin: 14px 0 0;
+            line-height: 1.7;
+            color: var(--muted);
+            word-break: break-word;
+        }
+
+        .result {
+            font-size: 0.95rem;
+        }
+
+        .guest-results {
+            margin-top: 24px;
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .guest-card {
+            padding: 18px;
+            border-radius: 22px;
+            background: var(--panel-soft);
+            border: 1px solid var(--line);
+        }
+
+        .guest-name {
+            margin: 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        .guest-meta,
+        .guest-link,
+        .guest-note {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.7;
+            word-break: break-word;
+        }
+
+        .guest-preview {
+            margin-top: 14px;
+            display: grid;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .guest-qr {
+            display: block;
+            width: min(100%, 220px);
+            border-radius: 18px;
+            background: #fff;
+            padding: 12px;
+        }
+
+        .guest-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 14px;
+            }
+
+            main {
+                padding: 22px 18px;
+                border-radius: 24px;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .guest-results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <p class="eyebrow">Tạo QR thiệp mời</p>
+        <h1>Tạo QR riêng<br>cho từng khách</h1>
+        <p class="lead">
+            Dán danh sách khách mời, mỗi dòng một người. Hệ thống sẽ tạo link riêng và QR riêng cho từng khách, khi họ quét sẽ mở đúng trang web buổi tiệc có tên của họ.
+        </p>
+
+        <div class="fields">
+            <div>
+                <label class="label" for="public-base-url">Link công khai của thiệp</label>
+                <input class="input" id="public-base-url" type="url" placeholder="Ví dụ: https://tenmien.com/thong-tin-buoi-tiec.html">
+            </div>
+
+            <div>
+                <label class="label" for="guest-list">Danh sách khách mời</label>
+                <textarea class="input input--textarea" id="guest-list" placeholder="Ví dụ:
+Minh Anh
+Lan Chi
+Ngọc Hà"></textarea>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="button button--primary" data-generate-button type="button">Tạo danh sách QR</button>
+            <button class="button button--secondary" data-copy-all-button type="button">Sao chép tất cả link</button>
+        </div>
+
+        <p class="helper">Muốn khách quét được bất cứ lúc nào trên điện thoại, bạn cần đưa thiệp lên một đường link web công khai rồi dán link đó vào ô bên trên.</p>
+        <p class="result" data-result></p>
+
+        <section class="guest-results" data-guest-results></section>
+    </main>
+
+    <script>
+        const guestNameFromUrl = new URLSearchParams(window.location.search).get("khach-moi")
+            || new URLSearchParams(window.location.search).get("guest");
+
+        if (guestNameFromUrl) {
+            const redirectUrl = new URL("thong-tin-buoi-tiec.html", window.location.href);
+            redirectUrl.search = window.location.search;
+            window.location.replace(redirectUrl.toString());
+        }
+
+        const publicBaseUrlInput = document.querySelector("#public-base-url");
+        const guestListInput = document.querySelector("#guest-list");
+        const generateButton = document.querySelector("[data-generate-button]");
+        const copyAllButton = document.querySelector("[data-copy-all-button]");
+        const guestResults = document.querySelector("[data-guest-results]");
+        const result = document.querySelector("[data-result]");
+
+        const storedPublicBaseUrl = window.localStorage.getItem("invitationPublicBaseUrl");
+        const storedGuestList = window.localStorage.getItem("invitationGuestList");
+
+        if (storedPublicBaseUrl) {
+            publicBaseUrlInput.value = storedPublicBaseUrl;
+        } else if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+            publicBaseUrlInput.value = new URL("thong-tin-buoi-tiec.html", window.location.href).toString();
+        }
+
+        if (storedGuestList) {
+            guestListInput.value = storedGuestList;
+        }
+
+        function buildGuestCode(guestIndex) {
+            return "guest-" + String(guestIndex + 1).padStart(3, "0");
+        }
+
+        function buildQrUrl(invitationUrl) {
+            const qrUrl = new URL("https://api.qrserver.com/v1/create-qr-code/");
+            qrUrl.searchParams.set("size", "500x500");
+            qrUrl.searchParams.set("data", invitationUrl.toString());
+            return qrUrl;
+        }
+
+        function parseGuestList() {
+            return guestListInput.value
+                .split(/\r?\n/)
+                .map(function (guest) {
+                    return guest.trim();
+                })
+                .filter(Boolean);
+        }
+
+        function parsePublicBaseUrl() {
+            const baseUrlValue = publicBaseUrlInput.value.trim();
+
+            if (!baseUrlValue) {
+                return null;
+            }
+
+            try {
+                return new URL(baseUrlValue, window.location.href);
+            } catch (error) {
+                return undefined;
+            }
+        }
+
+        function buildPreviewInvitationUrl(guestName, guestIndex) {
+            const invitationUrl = new URL("thong-tin-buoi-tiec.html", window.location.href);
+            invitationUrl.searchParams.set("khach-moi", guestName);
+            invitationUrl.searchParams.set("ma-khach", buildGuestCode(guestIndex));
+            return invitationUrl;
+        }
+
+        function buildShareInvitationUrl(guestName, guestIndex) {
+            const parsedPublicBaseUrl = parsePublicBaseUrl();
+
+            if (parsedPublicBaseUrl === undefined) {
+                return null;
+            }
+
+            const invitationUrl = parsedPublicBaseUrl
+                ? new URL(parsedPublicBaseUrl.toString())
+                : buildPreviewInvitationUrl(guestName, guestIndex);
+
+            invitationUrl.search = "";
+            invitationUrl.hash = "";
+            invitationUrl.searchParams.set("khach-moi", guestName);
+            invitationUrl.searchParams.set("ma-khach", buildGuestCode(guestIndex));
+            return invitationUrl;
+        }
+
+        function createGuestCard(guestName, guestIndex) {
+            const previewInvitationUrl = buildPreviewInvitationUrl(guestName, guestIndex).toString();
+            const shareInvitationUrl = buildShareInvitationUrl(guestName, guestIndex).toString();
+            const qrUrl = buildQrUrl(new URL(shareInvitationUrl)).toString();
+
+            const card = document.createElement("article");
+            card.className = "guest-card";
+
+            const name = document.createElement("p");
+            name.className = "guest-name";
+            name.textContent = guestName;
+
+            const meta = document.createElement("p");
+            meta.className = "guest-meta";
+            meta.textContent = "Mã khách: " + buildGuestCode(guestIndex);
+
+            const link = document.createElement("p");
+            link.className = "guest-link";
+            link.textContent = shareInvitationUrl;
+
+            const note = document.createElement("p");
+            note.className = "guest-note";
+            note.textContent = "Mở QR rồi lưu ảnh để gửi cho khách này.";
+
+            const preview = document.createElement("div");
+            preview.className = "guest-preview";
+
+            const qrImage = document.createElement("img");
+            qrImage.className = "guest-qr";
+            qrImage.src = qrUrl;
+            qrImage.alt = "QR của " + guestName;
+            qrImage.loading = "lazy";
+
+            const actions = document.createElement("div");
+            actions.className = "guest-actions";
+
+            const previewLink = document.createElement("a");
+            previewLink.className = "button button--primary";
+            previewLink.href = previewInvitationUrl;
+            previewLink.target = "_blank";
+            previewLink.rel = "noreferrer";
+            previewLink.textContent = "Xem thử";
+
+            const qrLink = document.createElement("a");
+            qrLink.className = "button button--secondary";
+            qrLink.href = qrUrl;
+            qrLink.target = "_blank";
+            qrLink.rel = "noreferrer";
+            qrLink.textContent = "Mở QR";
+
+            const copyLinkButton = document.createElement("button");
+            copyLinkButton.className = "button button--secondary";
+            copyLinkButton.type = "button";
+            copyLinkButton.textContent = "Sao chép link";
+            copyLinkButton.addEventListener("click", async function () {
+                try {
+                    await navigator.clipboard.writeText(shareInvitationUrl);
+                    result.textContent = "Đã sao chép link của " + guestName + ": " + shareInvitationUrl;
+                } catch (error) {
+                    result.textContent = "Không sao chép tự động được. Link của " + guestName + ": " + shareInvitationUrl;
+                }
+            });
+
+            actions.append(previewLink, qrLink, copyLinkButton);
+            preview.append(qrImage, actions);
+            card.append(name, meta, link, note, preview);
+            return card;
+        }
+
+        function renderGuestCards() {
+            const guests = parseGuestList();
+            const parsedPublicBaseUrl = parsePublicBaseUrl();
+
+            guestResults.replaceChildren();
+            window.localStorage.setItem("invitationGuestList", guestListInput.value);
+
+            if (publicBaseUrlInput.value.trim()) {
+                window.localStorage.setItem("invitationPublicBaseUrl", publicBaseUrlInput.value.trim());
+            } else {
+                window.localStorage.removeItem("invitationPublicBaseUrl");
+            }
+
+            if (parsedPublicBaseUrl === undefined) {
+                result.textContent = "Link công khai chưa đúng định dạng. Ví dụ đúng: https://tenmien.com/thong-tin-buoi-tiec.html";
+                return [];
+            }
+
+            if (!guests.length) {
+                result.textContent = "Hãy nhập danh sách khách mời, mỗi dòng một tên.";
+                return [];
+            }
+
+            guests.forEach(function (guestName, guestIndex) {
+                guestResults.append(createGuestCard(guestName, guestIndex));
+            });
+
+            if (!parsedPublicBaseUrl && window.location.protocol === "file:") {
+                result.textContent = "Đã tạo " + guests.length + " QR xem thử trên máy. Muốn khách quét được bất cứ lúc nào trên điện thoại, hãy nhập link web công khai của trang thiệp.";
+            } else {
+                result.textContent = "Đã tạo " + guests.length + " link và QR riêng cho từng khách.";
+            }
+
+            return guests;
+        }
+
+        generateButton.addEventListener("click", function () {
+            renderGuestCards();
+        });
+
+        copyAllButton.addEventListener("click", async function () {
+            const guests = renderGuestCards();
+
+            if (!guests.length) {
+                return;
+            }
+
+            const allLinks = guests.map(function (guestName, guestIndex) {
+                return guestName + ": " + buildShareInvitationUrl(guestName, guestIndex).toString();
+            }).join("\n");
+
+            try {
+                await navigator.clipboard.writeText(allLinks);
+                result.textContent = "Đã sao chép toàn bộ danh sách link mời.";
+            } catch (error) {
+                result.textContent = "Không sao chép tự động được. Danh sách link:\n" + allLinks;
+            }
+        });
+
+        if (guestListInput.value.trim()) {
+            renderGuestCards();
+        } else {
+            result.textContent = "Dán danh sách khách mời rồi bấm Tạo danh sách QR.";
+        }
+    </script>
+</body>
+</html>
